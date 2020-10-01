@@ -1,9 +1,7 @@
 <?php
-session_start();
-
+require_once ('conex.php');
 header('Content-Type: application/json');
 
-$conn = mysqli_connect("localhost","root","","proyecto");
 
 $sqlQuery = "SELECT
 eficiencia.calculoderelevancia AS CalculoEficiencia, 

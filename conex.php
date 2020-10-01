@@ -1,11 +1,8 @@
 <?php
-$hostname='localhost';
-$database='proyecto';
-$username='root';
-$password='';
 
-$conexion=new mysqli($hostname,$username,$password,$database);
-if($conexion->connect_errno){
+$conn = mysqli_connect("localhost", "root", "", "proyecto");
+
+if(!$conn){
     echo "El sitio web está experimentado problemas";
 }
 ?>
