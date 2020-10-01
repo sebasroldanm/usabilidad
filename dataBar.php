@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 header('Content-Type: application/json');
 
 $conn = mysqli_connect("localhost","root","","proyecto");
@@ -47,7 +49,7 @@ cargacognitiva
 ON 
 	usabilidad.cargacognitiva = cargacognitiva.id
 WHERE
-usabilidad.idevaluador = 4 AND
+usabilidad.aplicativo = ".$_GET["id"]." AND
 usabilidad.eficiencia = eficiencia.id AND
 usabilidad.eficacia = eficacia.id AND
 usabilidad.memorabilidad = memorabilidad.id AND
