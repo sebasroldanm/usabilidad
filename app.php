@@ -181,7 +181,7 @@
                 <div class="card-body">
                   <div class="chart-area" style="height: 100%;">
                     <div id="chart-container-barras">
-                      <canvas id="graficaHorizontal"></canvas>
+                      <canvas id="graficaHorizontal" style="height:5vh; width:20vw"></canvas>
                     </div>
                   </div>
                   <hr>
@@ -321,7 +321,7 @@
 
     function horizontalBar() {
       {
-        $.post("dataBarButtom.php",
+        $.post("dataBarButtom.php?id=<?php echo $_GET["id"]; ?>",
           function(data) {
             // console.log(data);
             var name = [];
@@ -340,6 +340,7 @@
                 borderColor: '#46d5f1',
                 hoverBackgroundColor: '#CCCCCC',
                 hoverBorderColor: '#666666',
+                // barPercentage: 0.2,
                 data: marks
               }]
             };
