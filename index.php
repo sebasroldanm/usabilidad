@@ -94,7 +94,17 @@
             <i class="fa fa-bars"></i>
           </button>
 
-
+          <!-- Topbar Search -->
+          <form action="index.php" method="GET" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+            <div class="input-group">
+              <input type="text" name="keyword" class="form-control bg-light border-0 small" placeholder="Buscar por ..." aria-label="Search" aria-describedby="basic-addon2">
+              <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">
+                  <i class="fas fa-search fa-sm"></i>
+                </button>
+              </div>
+            </div>
+          </form>
 
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">
@@ -131,12 +141,66 @@
           <h1 class="h3 mb-2 text-gray-800">Aplicaciones</h1>
           <!-- <p class="mb-4">Chart.js is a third party plugin that is used to generate the charts in this theme. The charts below have been customized - for further customization options, please visit the <a target="_blank" href="https://www.chartjs.org/docs/latest/">official Chart.js documentation</a>.</p> -->
 
-          
+
 
           <!-- Content Row -->
           <div class="row">
 
-            <?php include 'listApps.php'; ?>
+            <?php 
+              require_once('conex.php');
+
+              if (isset($_GET["keyword"])) {
+                  $sqlQuery = "SELECT DISTINCT
+                              registrardatosaplicativo.id,
+                              registrardatosaplicativo.nombre,
+                              tipodeaplicacion.tipoaplicativo 
+                          FROM
+                              usabilidad
+                              INNER JOIN registrardatosaplicativo ON usabilidad.aplicativo = registrardatosaplicativo.id
+                              INNER JOIN tipodeaplicacion ON registrardatosaplicativo.tipoaplicativo = tipodeaplicacion.id 
+                          WHERE
+                              usabilidad.aplicativo = registrardatosaplicativo.id 
+                              AND registrardatosaplicativo.tipoaplicativo = tipodeaplicacion.id 
+                              AND registrardatosaplicativo.nombre LIKE '%".$_GET["keyword"]."%'";
+              } else {
+                  $sqlQuery = "SELECT DISTINCT
+                                  registrardatosaplicativo.id,
+                                  registrardatosaplicativo.nombre,
+                                  tipodeaplicacion.tipoaplicativo 
+                              FROM
+                                  usabilidad
+                                  INNER JOIN registrardatosaplicativo ON usabilidad.aplicativo = registrardatosaplicativo.id
+                                  INNER JOIN tipodeaplicacion ON registrardatosaplicativo.tipoaplicativo = tipodeaplicacion.id 
+                              WHERE
+                                  usabilidad.aplicativo = registrardatosaplicativo.id 
+                                  AND registrardatosaplicativo.tipoaplicativo = tipodeaplicacion.id";
+              }
+              
+              $result = mysqli_query($conn, $sqlQuery);
+              
+              foreach ($result as $row) {
+              ?>
+                  <div class="col-xl-3 col-md-6 mb-4">
+                      <div class="card border-left-primary shadow h-100 py-2">
+                          <div class="card-body">
+                              <a href="app.php?id=<?= $row['id'] ?>" style="text-decoration:none">
+                                  <div class="row no-gutters align-items-center">
+                                      <div class="col mr-2">
+              
+                                          <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"><?= $row['tipoaplicativo'] ?></div>
+                                          <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $row['nombre'] ?></div>
+                                      </div>
+                                      <div class="col-auto">
+                                          <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                      </div>
+                                  </div>
+                              </a>
+                          </div>
+                      </div>
+                  </div>
+              <?php
+              }
+            ?>
 
             <!-- Donut Chart -->
 

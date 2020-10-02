@@ -155,7 +155,7 @@
                   <!-- Styling for the area chart can be found in the <code>/js/demo/chart-area-demo.js</code> file. -->
                 </div>
               </div>
-
+              
               <!-- Bar Chart -->
               <div class="card shadow mb-4">
                 <div class="card-header py-3">
@@ -165,15 +165,31 @@
                   <div class="chart-bar" style="height: 100%; float:">
                     <div id="chart-container-radar">
                       <div id="graficaRadar" style="width: 500px; height: 400px; margin-left: 25%;"></div>
+                      <!-- <canvas id="graficaRadar"></canvas> -->
                     </div>
                   </div>
                   <hr>
                   <!-- Styling for the bar chart can be found in the <code>/js/demo/chart-bar-demo.js</code> file. -->
                 </div>
               </div>
-
+              
+              <!-- Area Chart -->
+              <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">Gráfico de Aplicaciones</h6>
+                </div>
+                <div class="card-body">
+                  <div class="chart-area" style="height: 100%;">
+                    <div id="chart-container-barras">
+                      <canvas id="graficaHorizontal"></canvas>
+                    </div>
+                  </div>
+                  <hr>
+                  <!-- Styling for the area chart can be found in the <code>/js/demo/chart-area-demo.js</code> file. -->
+                </div>
+              </div>
             </div>
-
+            
             <!-- Donut Chart -->
 
           </div>
@@ -228,15 +244,14 @@
 
   <script>
     $(document).ready(function() {
-      showGraph();
+      showGraphBar();
+      showGraphRadar();
+      horizontalBar();
     });
 
-    console.log(window.location);
-
-
-    function showGraph() {
+    function showGraphBar() {
       {
-        $.post("dataBar.php?id=<?php echo $_GET["id"]; ?>",
+        $.post("dataGraph.php?id=<?php echo $_GET["id"]; ?>",
           function(data) {
             // console.log(data);
             var name = [];
@@ -263,6 +278,76 @@
 
             var barGraph = new Chart(graphTarget, {
               type: 'bar',
+              data: chartdata
+            });
+          });
+      }
+    }
+
+    function showGraphRadar() {
+      {
+        $.post("dataGraph.php?id=<?php echo $_GET["id"]; ?>",
+          function(data) {
+            // console.log(data);
+            var name = [];
+            var marks = [];
+
+            for (var i in data) {
+              name.push(data[i].student_name);
+              marks.push(data[i].marks);
+            }
+
+            var chartdata = {
+              labels: name,
+              datasets: [{
+                label: 'Cálculo',
+                backgroundColor: '#49e2ff',
+                borderColor: '#46d5f1',
+                hoverBackgroundColor: '#CCCCCC',
+                hoverBorderColor: '#666666',
+                data: marks
+              }]
+            };
+
+            var graphTarget = $("#graficaRadar");
+
+            var barGraph = new Chart(graphTarget, {
+              type: 'radar',
+              data: chartdata
+            });
+          });
+      }
+    }
+
+    function horizontalBar() {
+      {
+        $.post("dataBarButtom.php",
+          function(data) {
+            // console.log(data);
+            var name = [];
+            var marks = [];
+
+            for (var i in data) {
+              name.push(data[i].nombre);
+              marks.push(data[i].calculo);
+            }
+
+            var chartdata = {
+              labels: name,
+              datasets: [{
+                label: 'Cálculo',
+                backgroundColor: '#49e2ff',
+                borderColor: '#46d5f1',
+                hoverBackgroundColor: '#CCCCCC',
+                hoverBorderColor: '#666666',
+                data: marks
+              }]
+            };
+
+            var graphTarget = $("#graficaHorizontal");
+
+            var barGraph = new Chart(graphTarget, {
+              type: 'horizontalBar',
               data: chartdata
             });
           });
@@ -297,7 +382,7 @@
           series1.markers().enabled(true).type('circle').size(3);
 
           // chart tooltip format
-          chart.tooltip().format('Value: {%Value}');
+          chart.tooltip().format('Cálculo: {%Value}');
 
           // set container id for the chart
           chart.container('graficaRadar');

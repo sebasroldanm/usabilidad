@@ -1,24 +1,32 @@
 <?php
-
 require_once('conex.php');
 
-$sqlQuery = "SELECT DISTINCT 
-registrardatosaplicativo.id, 
-registrardatosaplicativo.nombre, 
-tipodeaplicacion.tipoaplicativo
-FROM
-usabilidad
-INNER JOIN
-registrardatosaplicativo
-ON 
-    usabilidad.aplicativo = registrardatosaplicativo.id
-INNER JOIN
-tipodeaplicacion
-ON 
-    registrardatosaplicativo.tipoaplicativo = tipodeaplicacion.id
-WHERE
-usabilidad.aplicativo = registrardatosaplicativo.id AND
-registrardatosaplicativo.tipoaplicativo = tipodeaplicacion.id";
+if (isset($_GET["keyword"])) {
+    $sqlQuery = "SELECT DISTINCT
+                registrardatosaplicativo.id,
+                registrardatosaplicativo.nombre,
+                tipodeaplicacion.tipoaplicativo 
+            FROM
+                usabilidad
+                INNER JOIN registrardatosaplicativo ON usabilidad.aplicativo = registrardatosaplicativo.id
+                INNER JOIN tipodeaplicacion ON registrardatosaplicativo.tipoaplicativo = tipodeaplicacion.id 
+            WHERE
+                usabilidad.aplicativo = registrardatosaplicativo.id 
+                AND registrardatosaplicativo.tipoaplicativo = tipodeaplicacion.id 
+                AND registrardatosaplicativo.nombre LIKE '% " . $_GET["keyword"] . " %'";
+} else {
+    $sqlQuery = "SELECT DISTINCT
+                    registrardatosaplicativo.id,
+                    registrardatosaplicativo.nombre,
+                    tipodeaplicacion.tipoaplicativo 
+                FROM
+                    usabilidad
+                    INNER JOIN registrardatosaplicativo ON usabilidad.aplicativo = registrardatosaplicativo.id
+                    INNER JOIN tipodeaplicacion ON registrardatosaplicativo.tipoaplicativo = tipodeaplicacion.id 
+                WHERE
+                    usabilidad.aplicativo = registrardatosaplicativo.id 
+                    AND registrardatosaplicativo.tipoaplicativo = tipodeaplicacion.id";
+}
 
 $result = mysqli_query($conn, $sqlQuery);
 
@@ -30,7 +38,7 @@ foreach ($result as $row) {
                 <a href="app.php?id=<?= $row['id'] ?>" style="text-decoration:none">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <?= $row['id'] ?>
+
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"><?= $row['tipoaplicativo'] ?></div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $row['nombre'] ?></div>
                         </div>
@@ -43,5 +51,5 @@ foreach ($result as $row) {
         </div>
     </div>
 <?php
-    // echo $row['id'] . $row['nombre'] . $row['tipoaplicativo'];
+
 }
