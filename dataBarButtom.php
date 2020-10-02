@@ -14,9 +14,10 @@ registrardatosaplicativo
 ON 
 	usabilidad.aplicativo = registrardatosaplicativo.id
 WHERE
-usabilidad.aplicativo = registrardatosaplicativo.id
+usabilidad.aplicativo = registrardatosaplicativo.id AND
+usabilidad.aplicativo = ".$_GET["id"]."
 ORDER BY
-registrardatosaplicativo.id";
+registrardatosaplicativo.id ASC";
 
 $result = mysqli_query($conn, $sqlQuery);
 
